@@ -149,7 +149,7 @@ int main(int argc, char** argv){
     ConvertPipeNode convert_pipe_node(nh);
     ROS_INFO_STREAM("Convert Pipe Node is OK !");
     ros::MultiThreadedSpinner spinner(1);
-    spinner.spin();
+    spinner.spin(); 
 
     // init msg pipe
 
