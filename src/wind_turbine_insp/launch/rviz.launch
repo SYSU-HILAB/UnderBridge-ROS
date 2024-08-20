@@ -1,0 +1,9 @@
+<launch>
+
+  <node name="rviz" 
+        pkg="rviz" 
+        type="rviz" 
+        args="-d $(find wind_turbine_insp)/rviz/wind_turbine_insp.rviz" 
+        output="screen" />
+
+</launch>

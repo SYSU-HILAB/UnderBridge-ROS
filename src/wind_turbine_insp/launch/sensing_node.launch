@@ -1,0 +1,63 @@
+<launch>
+
+  <arg name="arg_tower_height" default="75" />
+
+  <node pkg="wind_turbine_insp" type="sensing_node" name="sensing_node" required="true" output="screen" >
+    
+    <!-- subscriber topic remap -->
+    
+    <remap from="/wind_turbine_insp/forward_ptcloud" 
+           to="/wind_turbine_insp/ptcloud_world" />
+
+    <remap from="/wind_turbine_insp/blade_vector_detect_result" 
+           to="/detection/detection_result" />
+
+    <!-- publisher topic remap -->
+
+    <!-- params -->
+    
+    <param name="fan_tower_height"       value="$(arg arg_tower_height)" type="double" />
+    <param name="fan_blade_length"       value="52.0" type="double" />
+    <param name="fan_neck_depth"         value="6.0"  type="double" />
+    <param name="fan_tower_radius"       value="2.5"  type="double" />
+    <param name="fan_blade_pitch"        value="3.0"  type="double" />
+
+    <param name="start_blade"            value="1"    type="int" />
+
+    <param name="rate_ptcloud_proc"      value="2.0"  type="double" />
+
+    <param name="detect_dist"            value="30"   type="double" />
+    <param name="track_dist"             value="20"   type="double" />
+
+    <param name="tower_remove_radius"    value="4.0"   type="double" />
+    <param name="tower_top_adjust_k"     value="0.5"   type="double" />
+
+    <param name="blade_dir_err"          value="30.0"  type="double" />
+    <param name="blade_window_size_near"      value="6"     type="int" />
+    <param name="blade_window_size_far"       value="2"     type="int" />
+    <param name="plane_window_size"      value="48"     type="int" />
+
+    <param name="voxel_leaf_size"        value="1.0"  type="double" />
+
+    <param name="count_angle_detect"     value="1"  type="int" />
+    
+    <param name="weight_hub_posi_loc"    value="0.8"  type="double" />
+
+    <param name="arrow_width"            value="0.5"  type="double" />
+
+    <param name="enable_hub_vec_z"       value="false"  type="bool" />
+    
+    <param name="thold_tip_check_hit_pt"    value="1"  type="int" />
+    <param name="thold_tip_check_sum"       value="5"  type="int" />
+
+    <param name="thold_change_tower_height"    value="24"  type="int" />
+    <param name="change_k"                     value="2.0"  type="double" />
+
+    <param name="detect_circle_radius"         value="10.0"  type="double" />
+
+    <param name="search_blade_radius"         value="3.0"  type="double" />
+
+    <param name="search_tip_number"         value="12"  type="double" />
+  </node>
+
+</launch>

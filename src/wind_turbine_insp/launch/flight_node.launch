@@ -1,0 +1,116 @@
+<launch>
+  
+  <arg name="arg_track_mode" default="4" />
+  <arg name="arg_record_mode" default="0" />
+  <arg name="arg_single_side" default="2" />
+  <arg name="arg_tower_height" default="75" />
+
+  <node pkg="wind_turbine_insp" type="flight_node" name="flight_node" required="true" output="screen" >
+   
+    <!-- subscriber topic remap -->
+    <!-- publisher topic remap -->
+    
+    <remap from="/wind_turbine_insp/set_waypoint_common" 
+           to="/wind_turbine_insp/servoPose" />        
+    
+    <remap from="/wind_turbine_insp/set_waypoint_minco" 
+           to="/triger" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- params -->
+
+    <param name="track_mode"                    value="$(arg arg_track_mode)"    type="int" />
+    <param name="single_side"                   value="$(arg arg_single_side)"    type="int" />
+
+    <param name="enable_planning"               value="false"    type="bool" />
+
+    <param name="fan_tower_height"              value="$(arg arg_tower_height)" type="double" />
+    <param name="fan_blade_length"              value="53.0" type="double" />
+    <param name="fan_blade_width"               value="3.0" type="double" />
+
+    <param name="rate_stage_mode_update"        value="20"   type="double" />
+    <param name="rate_flight_control"           value="20"   type="double" />
+    <param name="rate_waypoint_sample"          value="2"    type="double" />
+    <param name="rate_set_gimbal_position"      value="5"    type="double" />
+    <param name="rate_set_camera_zoom"          value="10"  type="double" />
+    <param name="rate_msg_to_vision"            value="5"    type="double" />
+
+    <param name="kp_yaw"                        value="10.0" type="double" />
+    <param name="ki_yaw"                        value="0.0"  type="double" />
+    <param name="kd_yaw"                        value="1.0"  type="double" />
+    <param name="max_vel_yaw"                   value="90.0" type="double" />
+    <param name="max_acc_yaw"                   value="90.0" type="double" />
+
+    <param name="detect_dist"                   value="30.0"   type="double" />
+    <param name="track_dist"                    value="20.0"   type="double" />
+    <param name="desire_dist_rise"              value="5.0"    type="double" />
+    <param name="desire_dist_track"             value="4.0"    type="double" />
+    
+    <param name="loc_rotate_radius"             value="8.0"    type="double" />
+    <param name="loc_rotate_period"             value="16.0"   type="double" />
+
+    <param name="arrow_width"                   value="0.5"  type="double" />
+    <param name="arrow_history"                 value="false"  type="bool" />
+    <param name="traj_pt_size"                  value="1.0"  type="double" />
+    
+    <param name="thold_arrive_target"           value="1.0"  type="double" />
+    <param name="thold_keep_yaw_dist"           value="3.0"  type="double" />
+
+    <param name="thold_update_yaw"              value="0.5"  type="double" />
+
+    <param name="thold_enough_vel_slow"         value="0.5"  type="double" />
+    <param name="thold_enough_yaw_accu"         value="10.0"  type="double" />
+
+    <param name="dist_enable_sample_track_wps"  value="5.0"  type="double" />
+    <param name="deep_root_offset"              value="3.0"  type="double" />
+
+    <param name="yaw_ctrl_in_deg"               value="false"  type="bool" />
+
+    <param name="traj_vel_track"                value="1.0"  type="double" />
+    <param name="traj_vel_gimbal"               value="0.8"  type="double" />
+    <param name="traj_vel_turn"                 value="1.5"  type="double" />
+    <param name="traj_delay_time"               value="1.0"  type="double" />
+
+    <param name="traj_down_angle"               value="24.0"  type="double" />
+
+    <!-- 0 for each plane, 1 for each blade, 2 for shoot -->
+    <param name="video_record_mode"             value="$(arg arg_record_mode)"  type="int" />
+    <param name="if_include_tower"              value="true"  type="bool" />
+
+    <param name="zoom_factor_init"              value="3.0"  type="double" />
+    <param name="camera_zoom_k"                 value="0.12"  type="double" />
+
+    <param name="shoot_photo_coverage"          value="0.3"  type="double" />
+
+    <param name="enable_emergency_terminal"     value="true"  type="bool" />
+    <param name="future_occupied_dist"          value="5.0"  type="double" />
+    <param name="consequent_occupied_thold"     value="20"  type="int" />
+
+    <param name="tip_focus_thold"               value="0"  type="int" />
+    <param name="tip_focus_gap"                 value="2.5"  type="double" />
+    
+    <param name="gap_focus"                     value="10.0"  type="double" />
+    <param name="gap_zoom"                      value="10.0"  type="double" />
+
+    <param name="focus_time_root"               value="1.0"  type="double" />
+    <param name="focus_time_tip"                value="5.0"  type="double" />
+    <param name="zoom_time_root"                value="6.0"  type="double" />
+    <param name="zoom_time_tip"                 value="10.0"  type="double" />
+
+    <param name="enable_ptcloud_correct"                value="true"  type="bool" />
+
+  </node>
+
+</launch>

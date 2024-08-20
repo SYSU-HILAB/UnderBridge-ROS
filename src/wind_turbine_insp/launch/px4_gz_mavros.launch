@@ -1,0 +1,53 @@
+<launch>
+    <!-- argument config -->
+    <arg name="mav_name" default="typhoon_h480"/>
+    <arg name="world" default="$(find wind_turbine_insp)/sitl_gazebo/worlds/wind_farm.world"/>
+    <arg name="fcu_url" default="udp://:14540@127.0.0.1:14557"/>
+    <arg name="gcs_url" default="" />
+    <arg name="tgt_system" default="1" />
+    <arg name="tgt_component" default="1" />
+    <arg name="command_input" default="2" />
+    <arg name="log_output" default="screen" />
+    <arg name="fcu_protocol" default="v2.0" />
+    <arg name="respawn_mavros" default="false" />
+    <arg name="gazebo_gui" default="false" />
+    <arg name="use_sim_time" default="true" />
+    <arg name="x" default="0" />
+    <arg name="y" default="0" />
+    <arg name="z" default="0" />
+    <arg name="R" default="0" />
+    <arg name="P" default="0" />
+    <arg name="Y" default="0" />
+
+
+    <!-- launch px4 sitl -->
+    <include file="$(find px4)/launch/posix_sitl.launch">
+        <arg name="gui" value="$(arg gazebo_gui)"/>
+        <arg name="vehicle" value="$(arg mav_name)"/>
+        <arg name="world" value="$(arg world)"/>
+        <!--arg name="use_sim_time" value="$(arg use_sim_time)"/ -->
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="R" value="$(arg R)"/>
+        <arg name="P" value="$(arg P)"/>
+        <arg name="Y" value="$(arg Y)"/>
+
+
+
+    </include>
+
+    <!-- launch mavros  -->
+    <include file="$(find mavros)/launch/node.launch">
+        <arg name="pluginlists_yaml" value="$(find mavros)/launch/px4_pluginlists.yaml" />
+        <arg name="config_yaml" value="$(find mavros)/launch/px4_config.yaml" />
+        <arg name="fcu_url" value="$(arg fcu_url)" />
+        <arg name="gcs_url" value="$(arg gcs_url)" />
+        <arg name="tgt_system" value="$(arg tgt_system)" />
+        <arg name="tgt_component" value="$(arg tgt_component)" />
+        <arg name="log_output" value="$(arg log_output)" />
+        <arg name="fcu_protocol" value="$(arg fcu_protocol)" />
+        <arg name="respawn_mavros" default="$(arg respawn_mavros)" />
+    </include>
+
+</launch>

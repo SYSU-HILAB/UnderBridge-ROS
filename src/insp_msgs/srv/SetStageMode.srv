@@ -1,0 +1,15 @@
+# request
+
+# SOURCE DEFINITION
+
+uint8 SOURCE_ADMIN                        = 0
+uint8 SOURCE_CODE                         = 1
+
+# srv
+
+uint16 new_stage_mode
+uint8 source
+
+---
+# response
+bool result

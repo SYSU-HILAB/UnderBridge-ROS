@@ -1,0 +1,10 @@
+# constant for tasks
+uint8 TASK_TAKEOFF = 1
+uint8 TASK_LAND    = 2
+
+# request
+uint8 task
+
+---
+# response
+bool result

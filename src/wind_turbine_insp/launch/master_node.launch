@@ -1,0 +1,26 @@
+<launch>
+  
+  <node pkg="wind_turbine_insp" type="master_node" name="master_node" required="true" output="screen" >
+  
+  
+    <!-- params -->
+    
+    <param name="rate_sm_broadcast"       value="50.0" type="double" />
+    <param name="rate_odom_broadcast"     value="50.0" type="double" />
+    <param name="rate_task_ctrl"          value="30.0" type="double" />
+    <param name="rate_camera_exec"        value="10.0" type="double" />
+    <param name="rate_routine"            value="10.0" type="double" />
+
+    <param name="record_delay_start"      value="3.0" type="double" />
+    <param name="record_delay_end"        value="0.0" type="double" />
+    <param name="shoot_delay_start"       value="3.0" type="double" />
+    <param name="shoot_delay_end"         value="3.0" type="double" />
+
+    <param name="interval_shoot_photo"      value="2" type="int" />
+    <param name="arrow_width"               value="0.5"  type="double" />
+
+    <param name="gim_ctrl_gap"      value="1.8" type="double" />
+
+  </node>
+
+</launch>

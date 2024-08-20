@@ -1,0 +1,32 @@
+std_msgs/Header header
+
+geometry_msgs/Vector3 get_earth_posi_lla
+geometry_msgs/Vector3 get_world_posi_enu
+geometry_msgs/Quaternion get_world_quat_enu
+geometry_msgs/Vector3 get_world_euler_enu
+geometry_msgs/Vector3 get_world_velo_ned
+geometry_msgs/Vector3 get_world_gim_euler_ned
+geometry_msgs/Quaternion get_world_gim_quat_ned
+
+geometry_msgs/Vector3 get_local_posi_flu
+geometry_msgs/Quaternion get_local_quat_flu
+geometry_msgs/Vector3 get_local_euler_flu
+geometry_msgs/Vector3 get_local_velo_flu
+geometry_msgs/Quaternion get_local_gim_quat_flu
+geometry_msgs/Vector3 get_local_gim_euler_flu
+
+geometry_msgs/Vector3 set_local_velo_flu
+float64 set_local_yaw_dot_flu
+geometry_msgs/Vector3 set_local_gim_vector_flu
+
+geometry_msgs/Vector3 set_world_velo_neu
+float64 set_world_yaw_dot_neu
+geometry_msgs/Vector3 set_world_gim_vector_ned
+geometry_msgs/Vector3 set_world_gim_euler_ned
+
+bool status_camera_recording
+bool status_camera_shooting
+uint32 signal_record_start
+uint32 signal_record_end
+uint32 signal_shoot_start
+uint32 signal_shoot_end

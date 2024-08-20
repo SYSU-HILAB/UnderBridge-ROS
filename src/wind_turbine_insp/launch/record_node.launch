@@ -1,0 +1,13 @@
+<launch>
+
+  <arg name="arg_rate_record" default="2.0" />
+
+  <node pkg="wind_turbine_insp" type="record_node" name="record_node" required="true" output="screen" >
+
+    <param name="rate_record"        value="$(arg arg_rate_record)"    type="double" />
+    <param name="filename"        value="wind_turbine_insp_log"    type="string" />
+
+  
+  </node>
+
+</launch>

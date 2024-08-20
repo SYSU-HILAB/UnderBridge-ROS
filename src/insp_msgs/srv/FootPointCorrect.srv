@@ -1,0 +1,8 @@
+# require
+geometry_msgs/Point foot_pt
+geometry_msgs/Vector3 blade_vec
+
+---
+
+bool result
+geometry_msgs/Point grid_center
