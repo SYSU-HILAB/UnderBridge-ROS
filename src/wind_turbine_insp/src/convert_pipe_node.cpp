@@ -147,7 +147,8 @@ void ConvertPipeNode::convertMsg2PipeCallback(const ros::TimerEvent& event){
     if(readyToSendPipeMessage && msgid != -1)
     {
         // send msg into pipe
-        if (msgsnd(msgid, &commandMessage, sizeof(commandMessage.data), 0) == -1) {
+        int ret = msgsnd(msgid, &commandMessage, sizeof(commandMessage.data), 0);
+        if ( ret == -1 ) {
             ROS_WARN("[Convert Pipe Node]: Message send failed!");
             return;
         } else {
@@ -165,7 +166,7 @@ void ConvertPipeNode::convertMsg2PipeCallback(const ros::TimerEvent& event){
 /*####################*/
 void  INThandler(int sig)
 {
-    std::cout << "关闭程序计算服务请求，退出程序..." << std::endl;
+    std::cout << "[Convert Pipe Node]: 关闭程序服务，退出程序..." << std::endl;
     readyToSendPipeMessage = false;
     // 删除消息队列
     if (msgctl(msgid, IPC_RMID, 0) == -1) {
@@ -187,7 +188,7 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "convert_pipe_node");
     ros::NodeHandle nh;
     ConvertPipeNode convert_pipe_node(nh);
-    ROS_INFO_STREAM("Convert Pipe Node is OK!");
+    ROS_INFO_STREAM("[Convert Pipe Node]: Convert Pipe Node is OK!");
     // timer thread
     ros::MultiThreadedSpinner spinner(1);
     readyToSendPipeMessage = true;

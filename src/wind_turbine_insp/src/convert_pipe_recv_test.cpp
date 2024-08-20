@@ -13,7 +13,7 @@ using namespace std;
 /* 1：xyz速度，wxyz姿态  */
 /*#####################*/
 int msgid;
-#define MSGKEY 1000
+#define MSGKEY 1001
 #define MSGTYPE 1
 struct pipeMessageBuffer{
     long mType; // msg type
@@ -22,6 +22,7 @@ struct pipeMessageBuffer{
 
 
 int main(int argc, char** argv){
+    std::cout << "com in" << std::endl;
     // 获取消息队列
     int msqid = msgget(MSGKEY, 0666);
     if (msqid == -1) {
