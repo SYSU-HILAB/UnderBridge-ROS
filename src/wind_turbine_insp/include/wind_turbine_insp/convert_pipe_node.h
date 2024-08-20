@@ -35,6 +35,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
+#include <signal.h>
 
 
 
@@ -45,6 +46,7 @@ namespace class_convert_pipe{
 
   #define DEG2RAD(DEG) ((DEG) * (PI) / (180.0))
   #define RAD2DEG(RAD) ((RAD) * (180.0) / (PI))
+
 
   class ConvertPipeNode{
 
@@ -62,6 +64,7 @@ namespace class_convert_pipe{
         bool initSubscriber();
 
         bool initTimer();
+        
 
 
     protected:
@@ -127,6 +130,7 @@ namespace class_convert_pipe{
         // //   ros::Timer camera_execute_timer_;
         // ros::Timer node_status_timer_;
         // ros::Timer task_execute_timer_;
+        ros::Timer convert_msg_2_pipe_timer_;
 
     protected:
 
@@ -154,9 +158,7 @@ namespace class_convert_pipe{
         //   void cameraExecuteCallback(const ros::TimerEvent& event);
 
         /* ----------- Timer callback function ----------- */
-        void updateStageModeCallback(const ros::TimerEvent& event);
         void convertMsg2PipeCallback(const ros::TimerEvent& event);
-        void sampleTrajPointCallback(const ros::TimerEvent& event);
         // void sendMsgToVisionCallback(const ros::TimerEvent& event);
 
         /* ----------- Frame transform function ----------- */
@@ -195,11 +197,11 @@ namespace class_convert_pipe{
         double                                      rate_camera_exec_;
         double                                      rate_task_ctrl_;
 
+
         // time
-        ros::Time                                   last_info_time_;
+        ros::Time                                   info_time_;
         int                                         stage_mode_;
         ros::Time                                   last_update_request_time_;
-        ros::Time                                   info_time_;
 
         bool                                        local_frame_created_;
 
