@@ -23,7 +23,7 @@ optimizeMap(mocka::Maps::BasicInfo& in)
   cloud->height = in.cloud->height;
   cloud->points.resize(cloud->width * cloud->height);
 
-  for (uint32_t i = 0; i < cloud->width; i++)
+  for (int i = 0; i < cloud->width; i++)
   {
     cloud->points[i].x = in.cloud->points[i].x;
     cloud->points[i].y = in.cloud->points[i].y;
@@ -33,7 +33,7 @@ optimizeMap(mocka::Maps::BasicInfo& in)
   kdtree.setInputCloud(cloud);
   double radius = 1.75 / in.scale; // 1.75 is the rounded up value of sqrt(3)
 
-  for (uint32_t i = 0; i < cloud->width; i++)
+  for (int i = 0; i < cloud->width; i++)
   {
     std::vector<int>   pointIdxRadiusSearch;
     std::vector<float> pointRadiusSquaredDistance;

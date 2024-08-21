@@ -11,6 +11,22 @@
 
 using namespace mocka;
 
+// @GaaiLam
+void Maps::addGround() {
+  int add_ground;
+  info.nh_private->param("ground", add_ground, 0);
+  if (add_ground) {
+    double _x_l = -info.sizeX / (2 * info.scale);
+    double _y_l = -info.sizeY / (2 * info.scale);
+    for (int i=0; i<info.sizeX; ++i) {
+      for (int j=0; j<info.sizeY; ++j) {
+        info.cloud->points.emplace_back(
+          _x_l+i*1.0/info.scale, _y_l+j*1.0/info.scale, 0);
+      }
+    }
+  }
+}
+
 void
 Maps::randomMapGenerate()
 {
@@ -23,15 +39,20 @@ Maps::randomMapGenerate()
   double _x_h = info.sizeX / (2 * info.scale);
   double _y_l = -info.sizeY / (2 * info.scale);
   double _y_h = info.sizeY / (2 * info.scale);
-  double _h_l = 0;
-  double _h_h = info.sizeZ / info.scale;
+  // double _h_l = 0;
+  // double _h_h = info.sizeZ / info.scale;
 
-  double _w_l, _w_h;
+  double _w_l, _w_h, _h_l, _h_h;
   int    _ObsNum;
 
   info.nh_private->param("width_min", _w_l, 0.6);
   info.nh_private->param("width_max", _w_h, 1.5);
+  info.nh_private->param("height_min", _h_l, 1.5);
+  info.nh_private->param("height_max", _h_h, 1.5);
   info.nh_private->param("obstacle_number", _ObsNum, 10);
+
+  _h_l = _h_l >= 0 ? _h_l : 0;
+  _h_h = _h_h <= info.sizeZ / info.scale ? _h_h : info.sizeZ / info.scale;
 
   std::uniform_real_distribution<double> rand_x;
   std::uniform_real_distribution<double> rand_y;
@@ -81,11 +102,10 @@ Maps::randomMapGenerate()
         }
       }
   }
-
+  addGround();
   info.cloud->width    = info.cloud->points.size();
   info.cloud->height   = 1;
   info.cloud->is_dense = true;
-
   pcl2ros();
 }
 
@@ -174,6 +194,8 @@ Maps::perlin3D()
   info.cloud->width = pos;
   ROS_INFO("the number of points before optimization is %d", info.cloud->width);
   info.cloud->points.resize(info.cloud->width * info.cloud->height);
+  addGround();
+  info.cloud->width = info.cloud->points.size();
   pcl2ros();
 }
 
@@ -321,7 +343,7 @@ Maps::recursiveDivision(int xl, int xh, int yl, int yh, Eigen::MatrixXi& maze)
 
   else if (xl < xh - 2 && yl < yh - 2)
   {
-    // bool valid     = false; // used to judge whether the wall selection is valid
+    bool valid     = false; // used to judge whether the wall selection is valid
     int  xm        = 0;
     int  ym        = 0;
     int  doorcount = 0;
@@ -670,6 +692,7 @@ Maps::maze2D()
       }
     }
   }
+  addGround();
   info.cloud->width    = info.cloud->points.size();
   info.cloud->height   = 1;
   info.cloud->is_dense = true;
