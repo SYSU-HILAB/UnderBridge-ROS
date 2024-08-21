@@ -97,6 +97,13 @@ namespace class_convert_pipe{
         // ros::Publisher debug_drone_odom_enu_pub;
         // ros::Publisher debug_drone_odom_flu_pub;
 
+        /* ---------------------- gimable & camera publisher ---------------------- */
+        //   ros::Publisher local_gimbal_quat_publisher_;
+        //   ros::Publisher debug_gimbal_odom_enu_pub;
+        //   ros::Publisher debug_gimbal_odom_ned_pub;
+        //   ros::Publisher debug_gimbal_odom_flu_pub;
+        //   ros::Publisher gimbal_set_posi_publisher_;
+        //   ros::Publisher camera_set_zoom_publisher_;
 
 
         /* /////--------------------- Subscriber ---------------------///// */
@@ -107,8 +114,22 @@ namespace class_convert_pipe{
         /* ---------------------- states & control subscriber ---------------------- */
         ros::Subscriber traj_velo_subscriber_;
 
+        /* ---------------------- gimable & camera subscriber ---------------------- */
+        //   ros::Subscriber gimbal_set_vec_subscriber_;
+        //   ros::Subscriber global_gimbal_euler_subscriber_;
+        //   ros::Subscriber camera_set_zoom_subscriber_;
+        //   ros::Subscriber camera_set_focus_point_subscriber_;
+        //   ros::Subscriber camera_record_video_subscriber_;
+        //   ros::Subscriber camera_shoot_photo_subscriber_;
+
 
         /* /////--------------------- Timer ---------------------///// */
+        // ros::Timer stage_mode_publisher_timer_;
+        // ros::Timer routine_timer_;
+        // ros::Timer local_odom_publisher_timer_;
+        // //   ros::Timer camera_execute_timer_;
+        // ros::Timer node_status_timer_;
+        // ros::Timer task_execute_timer_;
         ros::Timer convert_msg_2_pipe_timer_;
 
     protected:
@@ -124,6 +145,17 @@ namespace class_convert_pipe{
         // void mavrosLocalOdomCallback(const nav_msgs::Odometry::ConstPtr& msg);
         void setVeloCallback(const insp_msgs::VeloCmd::ConstPtr& msg);
         void trajVeloCtrlCallback(const geometry_msgs::Twist::ConstPtr& msg);
+
+        /* ----------- Gimbal & camera callback function ----------- */
+        //   void gimbalSetVecCallback(const insp_msgs::GimbalSet::ConstPtr& msg);
+        //   void getGlobalGimbalEulerCallback(const sensor_msgs::Imu::ConstPtr& msg);
+        //   void cameraSetZoomCallback(const std_msgs::Float32::ConstPtr& msg);
+        //   void cameraSetFocusCallback(const insp_msgs::CameraFocusPoint::ConstPtr& msg);
+        //   void cameraRecordVideoCallback(const std_msgs::Bool::ConstPtr& msg);
+        //   void cameraShootPhotoCallback(const std_msgs::Bool::ConstPtr& msg);
+        //   void cameraRecordVideoDelayExec();
+        //   void cameraShootPhotoDelayExec();      
+        //   void cameraExecuteCallback(const ros::TimerEvent& event);
 
         /* ----------- Timer callback function ----------- */
         void convertMsg2PipeCallback(const ros::TimerEvent& event);
@@ -157,11 +189,23 @@ namespace class_convert_pipe{
         ros::NodeHandle                             nh_;
 
         std::atomic_flag                            mutex_ = ATOMIC_FLAG_INIT;
+        double                                      gim_ctrl_gap_;
 
+        double                                      rate_sm_broadcast_;
+        double                                      rate_odom_broadcast_;
+        double                                      rate_routine_;
+        double                                      rate_camera_exec_;
         double                                      rate_task_ctrl_;
+
 
         // time
         ros::Time                                   info_time_;
+        int                                         stage_mode_;
+        ros::Time                                   last_update_request_time_;
+
+        bool                                        local_frame_created_;
+
+        mavros_msgs::State                          mavros_state_;
 
         // velocity command
         insp_msgs::VeloCmd                          set_velo_;
@@ -203,6 +247,27 @@ namespace class_convert_pipe{
         int                                         flight_task_;
         ros::Time                                   last_req_time_;
         
+
+        double                                      last_yaw_;
+        double                                      last_pitch_;
+
+
+
+        bool                                        status_camera_recording_;
+        bool                                        status_camera_shooting_;
+
+        int                                         signal_record_start_;
+        int                                         signal_record_end_;
+        int                                         signal_shoot_start_;
+        int                                         signal_shoot_end_;
+
+        double                                      record_delay_start_;
+        double                                      record_delay_end_;
+        double                                      shoot_delay_start_;
+        double                                      shoot_delay_end_;
+
+        int                                         interval_shoot_photo_;
+
 
 
         std::shared_ptr<visualization::Visualization>    visPtr_;

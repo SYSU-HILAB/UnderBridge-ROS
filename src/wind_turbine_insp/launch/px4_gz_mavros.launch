@@ -20,6 +20,7 @@
     <arg name="Y" default="0" />
 
 
+
     <!-- launch px4 sitl -->
     <include file="$(find px4)/launch/posix_sitl.launch">
         <arg name="gui" value="$(arg gazebo_gui)"/>
@@ -32,9 +33,6 @@
         <arg name="R" value="$(arg R)"/>
         <arg name="P" value="$(arg P)"/>
         <arg name="Y" value="$(arg Y)"/>
-
-
-
     </include>
 
     <!-- launch mavros  -->
@@ -49,5 +47,6 @@
         <arg name="fcu_protocol" value="$(arg fcu_protocol)" />
         <arg name="respawn_mavros" default="$(arg respawn_mavros)" />
     </include>
+
 
 </launch>

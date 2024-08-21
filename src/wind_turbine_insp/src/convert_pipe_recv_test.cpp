@@ -7,6 +7,13 @@
 
 using namespace std;
 
+
+/*################################*/
+/* 直接运行可执行文件                */
+/* ./convert_..._recv_test        */
+/* 编译用：g++ convert_pipe_recv_test.cpp -o convert_pipe_recv_test -lrt  */
+/*################################*/
+
 /*#####################*/
 /* Message struct      */
 /* 消息类型列表：        */

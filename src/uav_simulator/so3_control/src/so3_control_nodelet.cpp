@@ -12,50 +12,50 @@
 
 class SO3ControlNodelet : public nodelet::Nodelet
 {
-public:
-  SO3ControlNodelet()
-    : position_cmd_updated_(false)
-    , position_cmd_init_(false)
-    , des_yaw_(0)
-    , des_yaw_dot_(0)
-    , current_yaw_(0)
-    , enable_motors_(true)
-    , // FIXME
-    use_external_yaw_(false)
-  {
-  }
+  public:
+    SO3ControlNodelet()
+      : position_cmd_updated_(false)
+      , position_cmd_init_(false)
+      , des_yaw_(0)
+      , des_yaw_dot_(0)
+      , current_yaw_(0)
+      , enable_motors_(true)
+      , // FIXME
+      use_external_yaw_(false)
+    {
+    }
 
-  void onInit(void);
+    void onInit(void);
 
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-private:
-  void publishSO3Command(void);
-  void position_cmd_callback(
-    const quadrotor_msgs::PositionCommand::ConstPtr& cmd);
-  void odom_callback(const nav_msgs::Odometry::ConstPtr& odom);
-  void enable_motors_callback(const std_msgs::Bool::ConstPtr& msg);
-  void corrections_callback(const quadrotor_msgs::Corrections::ConstPtr& msg);
-  void imu_callback(const sensor_msgs::Imu& imu);
+  private:
+    void publishSO3Command(void);
+    void position_cmd_callback(
+      const quadrotor_msgs::PositionCommand::ConstPtr& cmd);
+    void odom_callback(const nav_msgs::Odometry::ConstPtr& odom);
+    void enable_motors_callback(const std_msgs::Bool::ConstPtr& msg);
+    void corrections_callback(const quadrotor_msgs::Corrections::ConstPtr& msg);
+    void imu_callback(const sensor_msgs::Imu& imu);
 
-  SO3Control      controller_;
-  ros::Publisher  so3_command_pub_;
-  ros::Subscriber odom_sub_;
-  ros::Subscriber position_cmd_sub_;
-  ros::Subscriber enable_motors_sub_;
-  ros::Subscriber corrections_sub_;
-  ros::Subscriber imu_sub_;
+    SO3Control      controller_;
+    ros::Publisher  so3_command_pub_;
+    ros::Subscriber odom_sub_;
+    ros::Subscriber position_cmd_sub_;
+    ros::Subscriber enable_motors_sub_;
+    ros::Subscriber corrections_sub_;
+    ros::Subscriber imu_sub_;
 
-  bool        position_cmd_updated_, position_cmd_init_;
-  std::string frame_id_;
+    bool        position_cmd_updated_, position_cmd_init_;
+    std::string frame_id_;
 
-  Eigen::Vector3d des_pos_, des_vel_, des_acc_, kx_, kv_;
-  double          des_yaw_, des_yaw_dot_;
-  double          current_yaw_;
-  bool            enable_motors_;
-  bool            use_external_yaw_;
-  double          kR_[3], kOm_[3], corrections_[3];
-  double          init_x_, init_y_, init_z_;
+    Eigen::Vector3d des_pos_, des_vel_, des_acc_, kx_, kv_;
+    double          des_yaw_, des_yaw_dot_;
+    double          current_yaw_;
+    bool            enable_motors_;
+    bool            use_external_yaw_;
+    double          kR_[3], kOm_[3], corrections_[3];
+    double          init_x_, init_y_, init_z_;
 };
 
 void
