@@ -8,6 +8,7 @@
 #include <Eigen/Core>
 
 #include "perlinnoise.hpp"
+#include <math.h>
 
 using namespace mocka;
 
@@ -728,8 +729,10 @@ Maps::generate(int type)
       randomMapGenerate();
       break;
     case 3:
-      std::srand(info.seed);
-      maze2D();
+      // qiao
+      // std::srand(info.seed);
+      // maze2D();
+      generateBridge();
       break;
     case 4: // generating 3d maze
       std::srand(info.seed);
@@ -913,5 +916,150 @@ Maps::Maze3DGen()
   info.cloud->height = 1;
   ROS_INFO("the number of points before optimization is %d", info.cloud->width);
   info.cloud->points.resize(info.cloud->width * info.cloud->height);
+  pcl2ros();
+}
+
+// qiao
+// 生成圆柱体点云
+void generateCylinder(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
+                     const double& radius, const double& height,
+                     const double& x, const double& y, const double& z) {
+  const int num_points = 100; // 圆柱体上点的数量
+  for (int i = 0; i < num_points; ++i) {
+    double theta = 2 * M_PI * i / num_points;
+    for (int j = 0; j < height; ++j) {
+      pcl::PointXYZ point;
+      point.x = x + radius * cos(theta);
+      point.y = y + radius * sin(theta);
+      point.z = z + j;
+      cloud->points.push_back(point);
+    }
+  }
+}
+
+// 生成长方体点云
+void generateBox(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
+                  const double& width, const double& length, const double& height,
+                  const double& x, const double& y, const double& z) {
+  for (int i = 0; i < width; ++i) {
+    for (int j = 0; j < length; ++j) {
+      for (int k = 0; k < height; ++k) {
+        pcl::PointXYZ point;
+        point.x = x + i;
+        point.y = y + j;
+        point.z = z + k;
+        cloud->points.push_back(point);
+      }
+    }
+  }
+}
+
+// 生成桥
+// 生成桥面
+void generateBridgeDeck(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
+                       const double& width, const double& length, const double& height,
+                       const double& x, const double& y, const double& z) {
+  // 每个桥面最多 200 个点
+  const int maxPointsPerDeck = 50000;
+  // int numPoints = std::min((int)(width * length * height), maxPointsPerDeck); // 修改这里
+  int numPoints = maxPointsPerDeck; // 修改这里
+  cloud->resize(numPoints);
+
+  size_t idx = 0;
+  for (double i = 0; i < width && idx < numPoints; i += 0.25) {
+    for (double j = 0; j < length && idx < numPoints; j += 0.25) {
+      for (double k = 0; k < height && idx < numPoints; k += 0.25) {
+        cloud->points[idx].x = x + i;
+        cloud->points[idx].y = y + j;
+        cloud->points[idx].z = z + k;
+        ++idx;
+      }
+    }
+  }
+}
+
+// 生成桥墩
+void generateBridgePillar(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
+                         const double& radius, const double& height,
+                         const double& x, const double& y, const double& z) {
+  // 每个桥墩最多 50 个点
+  const int maxPointsPerPillar = 2000;
+  // int numPoints = std::min((int)(100 * height), maxPointsPerPillar); // 100 是圆柱体周向上的点数
+  int numPoints = maxPointsPerPillar; // 100 是圆柱体周向上的点数
+  cloud->resize(numPoints);
+
+  size_t idx = 0;
+  for (int i = 0; i < 2000 && idx < numPoints; ++i) {
+    double theta = 2 * M_PI * i / 100;
+    for (double j = 0; j < height && idx < numPoints; j += 0.5) {
+      cloud->points[idx].x = x + radius * cos(theta);
+      cloud->points[idx].y = y + radius * sin(theta);
+      cloud->points[idx].z = z + j;
+      ++idx;
+    }
+  }
+}
+
+void Maps::generateBridge() {
+  // 清空之前的点云数据
+  info.cloud->clear();
+
+  // // 生成桥面
+  // int numDecks = std::min(1, (int)ceil(info.bridge.bridge_length / info.bridge.pillar_spacing));
+  // for (int i = 0; i < numDecks; ++i) {
+  //   auto bridgeDeckCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+  //   generateBridgeDeck(bridgeDeckCloud,
+  //                     info.bridge.bridge_width, info.bridge.bridge_length, info.bridge.bridge_height,
+  //                     0.0, 0.0, info.bridge.pillar_height);
+  //   *info.cloud += *bridgeDeckCloud;
+  // }
+
+  // 计算桥墩坐标中心
+  // 声明 pillarSpacing 变量
+  double pillarSpacing = 50.0; 
+  double pillarCenterX = pillarSpacing / 2.0 - info.bridge.bridge_length / 2.0 + 10.0;
+
+  // 生成桥墩
+  // int numPillars = std::min(2, (int)ceil(info.bridge.bridge_length / info.bridge.pillar_spacing));
+  int numPillars = 1; // 桥墩的对数
+  for (int i = 0; i < numPillars; ++i) {
+    // 左侧桥墩
+    auto leftPillarCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+    generateBridgePillar(leftPillarCloud,
+                        // 向 x 轴正方向移动 10 米
+                        info.bridge.pillar_radius, info.bridge.pillar_height,
+                        i * info.bridge.pillar_spacing - info.bridge.bridge_length / 2.0 + 10,
+                        -info.bridge.bridge_width / 2.0, 0.0);
+    *info.cloud += *leftPillarCloud;
+
+    // 右侧桥墩
+    auto rightPillarCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+    generateBridgePillar(rightPillarCloud,
+                        info.bridge.pillar_radius, info.bridge.pillar_height,
+                        i * info.bridge.pillar_spacing - info.bridge.bridge_length / 2.0 + 10,
+                        info.bridge.bridge_width / 2.0, 0.0);
+    *info.cloud += *rightPillarCloud;
+  }
+
+  // 生成桥面
+  int numDecks = std::min(1, (int)ceil(info.bridge.bridge_length / info.bridge.pillar_spacing));
+  // 计算桥面中心点
+  double deckCenterX = (pillarSpacing / 2.0 - info.bridge.bridge_length / 2.0 - 19.5);
+  double deckCenterY = -5.5; // 桥面在 y 轴上的中心点为 0
+  // 设置桥面高度
+  double deckHeight = info.bridge.pillar_height ;
+  for (int i = 0; i < numDecks; ++i) {
+    auto bridgeDeckCloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZ>>();
+    generateBridgeDeck(bridgeDeckCloud,
+                    info.bridge.bridge_width, info.bridge.bridge_length, info.bridge.bridge_height,
+                    deckCenterX, deckCenterY, deckHeight);
+    *info.cloud += *bridgeDeckCloud;
+  }
+
+
+  addGround();
+  info.cloud->width    = info.cloud->points.size();
+  info.cloud->height   = 1;
+  info.cloud->is_dense = true;
   pcl2ros();
 }

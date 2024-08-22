@@ -108,7 +108,8 @@ main(int argc, char** argv)
 
   mocka::Maps map;
   map.setInfo(info);
-  map.generate(type);
+  type = 3;
+  map.generate(type); // type 1直接生成一大坨不知道是啥的东西，2随机森林地图，3大桥，4房间
 
   //  optimizeMap(info);
 

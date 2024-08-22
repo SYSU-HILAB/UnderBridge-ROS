@@ -6,11 +6,23 @@
 #include <pcl/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <iostream>
+#include <pcl/visualization/pcl_visualizer.h>
 
 namespace mocka {
 
 class Maps {
 public:
+  // qiao
+  struct Bridge {
+    double bridge_width = 10.0; // 同样决定桥墩的宽度
+    double bridge_length = 12.0; // 
+    double bridge_height = 3.0;
+    double pillar_radius = 1.0;
+    double pillar_height = 8.0; // 桥墩高度，每一层大概2m会生成一圈点云
+    double pillar_spacing = 5.0;
+  };
+
   typedef struct BasicInfo {
     ros::NodeHandle *nh_private;
     int sizeX;
@@ -20,6 +32,9 @@ public:
     double scale;
     sensor_msgs::PointCloud2 *output;
     pcl::PointCloud<pcl::PointXYZ> *cloud;
+
+    // qiao
+    Bridge bridge;
   } BasicInfo;
 
   BasicInfo getInfo() const;
@@ -45,6 +60,8 @@ private:
   void recursizeDivisionMaze(Eigen::MatrixXi &maze);
   void optimizeMap();
   void addGround();
+  // qiao
+  void generateBridge();
 };
 
 class MazePoint {
